@@ -10,4 +10,5 @@ import java.time.LocalDateTime;
 public class CustomerEventBase {
   protected final long customerId;
   protected final LocalDateTime eventOccurDtm;
+  
 }
