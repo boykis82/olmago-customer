@@ -1,0 +1,23 @@
+logging:
+  level:
+    root: INFO
+    team.caltech.olmago.customer.domain: INFO
+    com:
+      querydsl:
+        sql: INFO
+    org:
+      hibernate:
+        SQL: INFO
+        type: INFO
+
+#spring:
+#  jpa:
+#    show_sql: true
+#    format_sql: true
+#    hibernate:
+#      ddl-auto: auto
+#    properties:
+#      hibernate:
+#        show_sql: true
+#        format_sql: true
+#        default_batch_fetch_size: 10
