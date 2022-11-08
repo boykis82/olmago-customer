@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import team.caltech.olmago.customer.common.message.MessageEnvelope;
+import team.caltech.olmago.common.message.MessageEnvelope;
 import team.caltech.olmago.customer.domain.*;
 import team.caltech.olmago.customer.domain.event.CustomerEventBase;
 import team.caltech.olmago.customer.dto.CreateCustomerDto;
@@ -49,13 +49,11 @@ public class CustomerServiceImpl implements CustomerService {
   @Override
   @Transactional
   public CustomerDto linkMobilePhone(long id, MobilePhoneDto dto) {
-    LocalDateTime now = LocalDateTime.now();
-    
     Customer customer = customerRepository.findById(id).orElseThrow(IllegalArgumentException::new);
-    messageStore.saveMessage(
-        wrapEvent(customer.unlinkMobilePhone(now))
-    );
-    
+    if (customer.findActiveMobilePhone().isPresent()) {
+      throw new IllegalStateException();
+    }
+    LocalDateTime now = LocalDateTime.now();
     MobilePhone mobilePhone = MobilePhone.builder()
         .svcMgmtNum(dto.getSvcMgmtNum())
         .phoneNumber(dto.getPhoneNumber())

@@ -1,5 +1,5 @@
 rootProject.name = 'olmago-customer'
-include 'common'
+include 'olmago-common'
 include 'domain'
 include 'service'
 include 'infra:message-bus'
