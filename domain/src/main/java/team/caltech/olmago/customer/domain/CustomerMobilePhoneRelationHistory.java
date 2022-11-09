@@ -26,11 +26,11 @@ public class CustomerMobilePhoneRelationHistory {
   private int version;
   
   @ManyToOne
-  @JoinColumn(name = "customer")
+  @JoinColumn(name = "cust_id")
   private Customer customer;
   
   @ManyToOne
-  @JoinColumn(name = "mbl_phone")
+  @JoinColumn(name = "mbl_phone_id")
   private MobilePhone mobilePhone;
   
   @Column(name = "eff_sta_dtm")

@@ -1,69 +1,14 @@
-server.port: 8082
-server.error.include-message: always
-
-spring:
-  profiles:
-    include: domain
-  datasource:
-    url: jdbc:mysql://localhost:3306/olmago_customer
-    username: olmago
-    password: olmago
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
-#  h2:
-#    console:
-#      enabled: true
-#      path: /h2-console
-
-#  datasource:
-#    driver-class-name: org.h2.Driver
-#    url: jdbc:h2:~/order;
-#    username: usr
-#    password: pwd
-    #data: classpath:data.sql
-    #initialization-mode: always        spring 2.5??? ?? ??? data.sql ????.
-
-  jpa:
-    hibernate:
-      ddl-auto: none
-    properties:
-      hibernate:
-        show_sql: true
-        format_sql: true
-        default_batch_fetch_size: 10
-
-spring.cloud.function:
-  definition: functionRouter
-  routing-expression: headers['message-name']
-
-spring.kafka.bootstrap-servers: 127.0.0.1:9093
+spring.profiles.group:
+  "local": "kafka-dev,db-local,app-dev"
+  "dev": "kafka-dev,db-dev,app-dev"
+  "prod": "kafka-prod,db-prod,app-prod"
 
 spring.cloud.stream:
-  defaultBinder: kafka
-
-  kafka:
-    binder:
-      brokers: 127.0.0.1
-      defaultBrokerPort: 9093
-      replication-factor: 1
-
-  default.contentType: application/json
-
   bindings:
-    functionRouter-in-0:
-      destination: contract-event-topic
-      group: order-group
-      consumer:
-        maxAttempts: 3
-        backOffInitialInterval: 500
-        backOffMaxInterval: 1000
-        backOffMultiplier: 2.0
+    customer-event-0:
+      destination: customer-event-topic
+      producer:
+        required-groups: auditGroup
 
----
-spring.profiles: docker
-
-server.port: 80
-
-spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/olmago_customer
+  defaultBinder: kafka
+  default.contentType: application/json
