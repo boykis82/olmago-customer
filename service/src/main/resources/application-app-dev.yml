@@ -12,3 +12,8 @@ logging:
       hibernate:
         SQL: DEBUG
         type: DEBUG
+
+app:
+  swing-service:
+    host: localhost
+    port: 8090

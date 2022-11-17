@@ -8,8 +8,11 @@ import team.caltech.olmago.common.message.MessageEnvelopeRepository;
 import team.caltech.olmago.customer.dto.CreateCustomerDto;
 import team.caltech.olmago.customer.dto.CustomerDto;
 import team.caltech.olmago.customer.dto.MobilePhoneDto;
+import team.caltech.olmago.customer.service.proxy.ReqRelMobilePhoneAndOlmagoCustDto;
+import team.caltech.olmago.customer.service.proxy.SwingProxy;
 import team.caltech.olmago.customer.service.service.CustomerService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -19,6 +22,7 @@ import java.util.List;
 public class CustomerController {
   private final MessageEnvelopeRepository messageEnvelopeRepository;
   private final CustomerService customerService;
+  private final SwingProxy swingProxy;
   
   @GetMapping("/{id}")
   public ResponseEntity<CustomerDto> findById(@PathVariable("id") long id) {
@@ -32,12 +36,28 @@ public class CustomerController {
   
   @PutMapping("/{id}/linkMobilePhone")
   public ResponseEntity<CustomerDto> linkMobilePhone(@PathVariable("id") long id, @RequestBody MobilePhoneDto dto) {
-    return ResponseEntity.ok(customerService.linkMobilePhone(id, dto));
+    CustomerDto response = customerService.linkMobilePhone(id, dto);
+    swingProxy.linkMobilePhoneAndOlmagoCustomer(
+        ReqRelMobilePhoneAndOlmagoCustDto.builder()
+            .olmagoCustomerId(response.getId())
+            .svcMgmtNum(response.getSvcMgmtNum())
+            .eventDateTime(LocalDateTime.now())
+            .build()
+    );
+    return ResponseEntity.ok(response);
   }
   
   @PutMapping("/{id}/unlinkMobilePhone")
   public ResponseEntity<CustomerDto> unlinkMobilePhone(@PathVariable("id") long id, @RequestBody MobilePhoneDto dto) {
-    return ResponseEntity.ok(customerService.unlinkMobilePhone(id, dto));
+    CustomerDto response = customerService.unlinkMobilePhone(id, dto);
+    swingProxy.unlinkMobilePhoneAndOlmagoCustomer(
+        ReqRelMobilePhoneAndOlmagoCustDto.builder()
+            .olmagoCustomerId(response.getId())
+            .svcMgmtNum(response.getSvcMgmtNum())
+            .eventDateTime(LocalDateTime.now())
+            .build()
+    );
+    return ResponseEntity.ok(response);
   }
   
   @PutMapping("/{id}/changeMobilePhonePricePlan")
