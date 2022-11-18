@@ -43,7 +43,7 @@ public class Customer {
   @Column(name = "ci", length = 256, nullable = false)
   private String ci;
   
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "customer")
+  @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, mappedBy = "customer")
   private List<CustomerMobilePhoneRelationHistory> customerMobilePhoneRelationHistories = new ArrayList<>();
   
   @Builder

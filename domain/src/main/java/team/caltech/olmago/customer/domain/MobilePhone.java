@@ -41,7 +41,7 @@ public class MobilePhone {
   @Column(name = "dc_uzoo_pass_prod_cd")
   private String dcTargetUzooPassProductCode;
   
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "mobilePhone")
+  @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, mappedBy = "mobilePhone")
   private List<CustomerMobilePhoneRelationHistory> customerMobilePhoneRelationHistories = new ArrayList<>();
   
   @Builder
