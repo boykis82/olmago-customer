@@ -1,11 +1,11 @@
 package team.caltech.olmago.customer.domain.event;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @Getter
 public class MobilePhonePricePlanChangedEvent extends CustomerEventBase {
   private final long mobilePhoneSvcMgmtNum;

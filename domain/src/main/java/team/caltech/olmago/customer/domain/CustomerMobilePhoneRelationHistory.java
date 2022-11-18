@@ -50,4 +50,8 @@ public class CustomerMobilePhoneRelationHistory {
   public void terminate(LocalDateTime unlinkedDateTime) {
     this.effEndDtm = unlinkedDateTime;
   }
+  
+  public boolean isLastHistory() {
+    return effEndDtm.isBefore(LocalDateTimeUtil.MAX_LOCAL_DATE_TIME);
+  }
 }

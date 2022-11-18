@@ -29,6 +29,8 @@ public class Customer {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   
+  void setId(long id) { this.id = id; };
+  
   @Version
   private int version;
   
@@ -52,6 +54,9 @@ public class Customer {
   }
   
   public MobilePhoneServiceLinkedEvent linkMobilePhone(CustomerMobilePhoneRelationHistory cmprh) {
+    if (findActiveMobilePhone().isPresent()) {
+      throw new IllegalStateException();
+    }
     customerMobilePhoneRelationHistories.add(cmprh);
     MobilePhone mp = cmprh.getMobilePhone();
     return MobilePhoneServiceLinkedEvent.builder()
@@ -65,11 +70,9 @@ public class Customer {
   }
   
   public MobilePhoneServiceUnlinkedEvent unlinkMobilePhone(LocalDateTime unlinkedDateTime) {
-    Optional<CustomerMobilePhoneRelationHistory> cmprhOpt = findActiveMobilePhone();
-    if (cmprhOpt.isEmpty())
-      return null;
+    CustomerMobilePhoneRelationHistory cmprh = findActiveMobilePhone()
+        .orElseThrow(IllegalStateException::new);
     
-    CustomerMobilePhoneRelationHistory cmprh = cmprhOpt.get();
     MobilePhone mp = cmprh.getMobilePhone();
     cmprh.terminate(unlinkedDateTime);
     return MobilePhoneServiceUnlinkedEvent.builder()
@@ -89,11 +92,8 @@ public class Customer {
   }
   
   public MobilePhonePricePlanChangedEvent changeMobilePhonePricePlan(MobilePhonePricePlan mobilePhonePricePlan, String productName, String dcTargetUzooPassProductCode, LocalDateTime chgDtm) {
-    Optional<CustomerMobilePhoneRelationHistory> cmprhOpt = findActiveMobilePhone();
-    if (cmprhOpt.isEmpty())
-      return null;
-  
-    CustomerMobilePhoneRelationHistory cmprh = cmprhOpt.get();
+    CustomerMobilePhoneRelationHistory cmprh = findActiveMobilePhone()
+        .orElseThrow(IllegalStateException::new);
     MobilePhone mp = cmprh.getMobilePhone();
     mp.changeMobilePhonePricePlan(mobilePhonePricePlan, productName, dcTargetUzooPassProductCode);
     return MobilePhonePricePlanChangedEvent.builder()
