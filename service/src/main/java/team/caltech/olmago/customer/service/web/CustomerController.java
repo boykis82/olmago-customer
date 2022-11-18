@@ -37,31 +37,19 @@ public class CustomerController {
   @PutMapping("/{id}/linkMobilePhone")
   public ResponseEntity<CustomerDto> linkMobilePhone(@PathVariable("id") long id, @RequestBody MobilePhoneDto dto) {
     CustomerDto response = customerService.linkMobilePhone(id, dto);
-    swingProxy.linkMobilePhoneAndOlmagoCustomer(
-        ReqRelMobilePhoneAndOlmagoCustDto.builder()
-            .olmagoCustomerId(response.getId())
-            .svcMgmtNum(response.getSvcMgmtNum())
-            .eventDateTime(LocalDateTime.now())
-            .build()
-    );
+    swingProxy.linkMobilePhoneAndOlmagoCustomer(toReqRelMobilePhoneAndOlmagoCustDto(response)).block();
     return ResponseEntity.ok(response);
   }
   
   @PutMapping("/{id}/unlinkMobilePhone")
   public ResponseEntity<CustomerDto> unlinkMobilePhone(@PathVariable("id") long id, @RequestBody MobilePhoneDto dto) {
     CustomerDto response = customerService.unlinkMobilePhone(id, dto);
-    swingProxy.unlinkMobilePhoneAndOlmagoCustomer(
-        ReqRelMobilePhoneAndOlmagoCustDto.builder()
-            .olmagoCustomerId(response.getId())
-            .svcMgmtNum(response.getSvcMgmtNum())
-            .eventDateTime(LocalDateTime.now())
-            .build()
-    );
+    swingProxy.unlinkMobilePhoneAndOlmagoCustomer(toReqRelMobilePhoneAndOlmagoCustDto(response)).block();
     return ResponseEntity.ok(response);
   }
   
   @PutMapping("/{id}/changeMobilePhonePricePlan")
-  public ResponseEntity<CustomerDto> changeMobilePhonePrlcePlan(@PathVariable("id") long id, @RequestBody MobilePhoneDto dto) {
+  public ResponseEntity<CustomerDto> changeMobilePhonePricePlan(@PathVariable("id") long id, @RequestBody MobilePhoneDto dto) {
     return ResponseEntity.ok(customerService.changeMobilePhonePricePlan(id, dto));
   }
 
@@ -70,4 +58,11 @@ public class CustomerController {
     return ResponseEntity.ok(messageEnvelopeRepository.findAll());
   }
 
+  private ReqRelMobilePhoneAndOlmagoCustDto toReqRelMobilePhoneAndOlmagoCustDto(CustomerDto customerDto) {
+    return ReqRelMobilePhoneAndOlmagoCustDto.builder()
+        .olmagoCustomerId(customerDto.getId())
+        .svcMgmtNum(customerDto.getSvcMgmtNum())
+        .eventDateTime(LocalDateTime.now())
+        .build();
+  }
 }

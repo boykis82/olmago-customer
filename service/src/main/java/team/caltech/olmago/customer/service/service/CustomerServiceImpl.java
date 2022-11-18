@@ -53,26 +53,35 @@ public class CustomerServiceImpl implements CustomerService {
     if (customer.findActiveMobilePhone().isPresent()) {
       throw new IllegalStateException();
     }
-    LocalDateTime now = LocalDateTime.now();
-    MobilePhone mobilePhone = MobilePhone.builder()
+    MobilePhone mobilePhone = createMobilePhone(dto);
+    mobilePhoneRepository.save(mobilePhone);
+    
+    messageStore.saveMessage(
+        wrapEvent(
+            customer.linkMobilePhone(
+                createCustomerMobilePhoneRelation(customer, mobilePhone)
+            )
+        )
+    );
+    return new CustomerDto(customer);
+  }
+  
+  private MobilePhone createMobilePhone(MobilePhoneDto dto) {
+    return MobilePhone.builder()
         .svcMgmtNum(dto.getSvcMgmtNum())
         .phoneNumber(dto.getPhoneNumber())
         .productName(dto.getProductName())
         .mobilePhonePricePlan(MobilePhonePricePlan.valueOf(dto.getMobilePhonePricePlan()))
         .dcTargetUzooPassProductCode(dto.getDcTargetUzooPassProductCode())
         .build();
-    mobilePhoneRepository.save(mobilePhone);
-    
-    CustomerMobilePhoneRelationHistory cmprh = CustomerMobilePhoneRelationHistory.builder()
+  }
+  
+  private CustomerMobilePhoneRelationHistory createCustomerMobilePhoneRelation(Customer customer, MobilePhone mobilePhone) {
+    return CustomerMobilePhoneRelationHistory.builder()
         .customer(customer)
         .mobilePhone(mobilePhone)
-        .effStaDtm(now)
+        .effStaDtm(LocalDateTime.now())
         .build();
-    messageStore.saveMessage(
-        wrapEvent(customer.linkMobilePhone(cmprh))
-    );
-    
-    return new CustomerDto(customer);
   }
   
   @Override
