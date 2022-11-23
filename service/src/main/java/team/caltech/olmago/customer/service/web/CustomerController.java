@@ -37,14 +37,14 @@ public class CustomerController {
   @PutMapping("/{id}/linkMobilePhone")
   public ResponseEntity<CustomerDto> linkMobilePhone(@PathVariable("id") long id, @RequestBody MobilePhoneDto dto) {
     CustomerDto response = customerService.linkMobilePhone(id, dto);
-    swingProxy.linkMobilePhoneAndOlmagoCustomer(toReqRelMobilePhoneAndOlmagoCustDto(response)).block();
+    swingProxy.linkMobilePhoneAndOlmagoCustomer(toReqRelMobilePhoneAndOlmagoCustDto(response)).subscribe();
     return ResponseEntity.ok(response);
   }
   
   @PutMapping("/{id}/unlinkMobilePhone")
   public ResponseEntity<CustomerDto> unlinkMobilePhone(@PathVariable("id") long id, @RequestBody MobilePhoneDto dto) {
     CustomerDto response = customerService.unlinkMobilePhone(id, dto);
-    swingProxy.unlinkMobilePhoneAndOlmagoCustomer(toReqRelMobilePhoneAndOlmagoCustDto(response)).block();
+    swingProxy.unlinkMobilePhoneAndOlmagoCustomer(toReqRelMobilePhoneAndOlmagoCustDto(response)).subscribe();
     return ResponseEntity.ok(response);
   }
   
