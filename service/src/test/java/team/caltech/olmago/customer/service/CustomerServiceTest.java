@@ -59,8 +59,56 @@ public class CustomerServiceTest {
         .dcTargetUzooPassProductCode("NMO0000001")
         .build();
     customerDto = customerService.linkMobilePhone(customerDto.getId(), mobilePhoneDto);
+    
     // then
     assertThat(customerDto.getMobilePhonePricePlan()).isEqualTo("PLATINUM");
     assertThat(customerDto.getSvcMgmtNum()).isEqualTo(7000000001L);
+    assertThat(customerDto.getDcTargetUzooPassProductCode()).isEqualTo("NMO0000001");
+  }
+  
+  @Test
+  public void givenCustomerAndMobilePhone_whenUnlinkMobilePhone_thenSuccess() {
+    // given
+    MobilePhoneDto mobilePhoneDto = MobilePhoneDto.builder()
+        .svcMgmtNum(7000000001L)
+        .phoneNumber("01012345678")
+        .mobilePhonePricePlan("PLATINUM")
+        .productName("플래티넘")
+        .dcTargetUzooPassProductCode("NMO0000001")
+        .build();
+    customerService.linkMobilePhone(customerDto.getId(), mobilePhoneDto);
+    
+    // when
+    customerDto = customerService.unlinkMobilePhone(customerDto.getId(), mobilePhoneDto);
+    
+    // then
+    assertThat(customerDto.getMobilePhonePricePlan()).isNull();
+    assertThat(customerDto.getSvcMgmtNum()).isNull();
+  }
+  
+  @Test
+  public void givenCustomerAndMobilePhone_whenChangeMobilePhonePricePlan_thenSuccess() {
+    // given
+    MobilePhoneDto mobilePhoneDto = MobilePhoneDto.builder()
+        .svcMgmtNum(7000000001L)
+        .phoneNumber("01012345678")
+        .mobilePhonePricePlan("PLATINUM")
+        .productName("플래티넘")
+        .dcTargetUzooPassProductCode("NMO0000001")
+        .build();
+    customerService.linkMobilePhone(customerDto.getId(), mobilePhoneDto);
+    
+    // when
+    mobilePhoneDto = MobilePhoneDto.builder()
+        .svcMgmtNum(7000000001L)
+        .phoneNumber("01012345678")
+        .mobilePhonePricePlan("SPECIAL")
+        .productName("스페셜")
+        .build();
+    customerDto = customerService.changeMobilePhonePricePlan(customerDto.getId(), mobilePhoneDto);
+    
+    // then
+    assertThat(customerDto.getMobilePhonePricePlan()).isEqualTo("SPECIAL");
+    assertThat(customerDto.getDcTargetUzooPassProductCode()).isNull();
   }
 }

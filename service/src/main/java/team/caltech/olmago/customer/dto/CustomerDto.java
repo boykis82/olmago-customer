@@ -19,6 +19,7 @@ public class CustomerDto {
   private String productName;
   private String mobilePhonePricePlan;
   private LocalDateTime linkedDateTime;
+  private String dcTargetUzooPassProductCode;
   
   public CustomerDto(Customer entity) {
     this.id = entity.getId();
@@ -32,6 +33,7 @@ public class CustomerDto {
           this.svcMgmtNum = mp.getMobilePhone().getSvcMgmtNum();
           this.productName = mp.getMobilePhone().getProductName();
           this.mobilePhonePricePlan = mp.getMobilePhone().getMobilePhonePricePlan().name();
+          this.dcTargetUzooPassProductCode = mp.getMobilePhone().getDcTargetUzooPassProductCode();
         }
     );
   }
