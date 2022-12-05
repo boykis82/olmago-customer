@@ -8,6 +8,7 @@ import team.caltech.olmago.customer.domain.event.MobilePhoneServiceUnlinkedEvent
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -57,7 +58,7 @@ public class CustomerMobilePhoneRelationTest {
         .phoneNumber(phoneNumber)
         .productName(productName)
         .svcMgmtNum(svcMgmtNum)
-        .dcTargetUzooPassProductCode(dcTargetUzooPassProductCode)
+        .dcTargetUzooPassProductCodes(List.of(dcTargetUzooPassProductCode))
         .build();
   
     mobilePhone2 = MobilePhone.builder()
@@ -65,6 +66,7 @@ public class CustomerMobilePhoneRelationTest {
         .phoneNumber(phoneNumber)
         .productName(productName)
         .svcMgmtNum(svcMgmtNum)
+        .dcTargetUzooPassProductCodes(List.of(dcTargetUzooPassProductCode))
         .build();
     
     cmprh = CustomerMobilePhoneRelationHistory.builder()
@@ -91,7 +93,7 @@ public class CustomerMobilePhoneRelationTest {
         .linkedDtm(now)
         .mobilePhoneSvcMgmtNum(svcMgmtNum)
         .mobilePhonePricePlan(platinumPricePlan.name())
-        .dcTargetUzooPassProductCode(dcTargetUzooPassProductCode)
+        .dcTargetUzooPassProductCodes(List.of(dcTargetUzooPassProductCode))
         .build();
     
     // then
@@ -129,6 +131,7 @@ public class CustomerMobilePhoneRelationTest {
         .linkedDtm(after3Days)
         .mobilePhoneSvcMgmtNum(svcMgmtNum)
         .mobilePhonePricePlan(platinumPricePlan.name())
+        .dcTargetUzooPassProductCodes(List.of("NMO0000001"))
         .build();
     
     // then
@@ -147,11 +150,8 @@ public class CustomerMobilePhoneRelationTest {
     MobilePhoneServiceUnlinkedEvent actualEvent = cust.unlinkMobilePhone(now);
     MobilePhoneServiceUnlinkedEvent expectedEvent = MobilePhoneServiceUnlinkedEvent.builder()
         .customerId(customerId)
-        .mobilePhoneNumber(phoneNumber)
         .unlinkedDtm(now)
         .mobilePhoneSvcMgmtNum(svcMgmtNum)
-        .mobilePhonePricePlan(platinumPricePlan.name())
-        .dcTargetUzooPassProductCode(dcTargetUzooPassProductCode)
         .build();
     // then
     assertThat(cust.findActiveMobilePhone().isPresent()).isFalse();
@@ -189,14 +189,14 @@ public class CustomerMobilePhoneRelationTest {
     
     // when
     MobilePhonePricePlanChangedEvent actualEvent =
-        cust.changeMobilePhonePricePlan(afterPricePlan, "스페셜", "NMO0000002", now);
+        cust.changeMobilePhonePricePlan(afterPricePlan, "스페셜", List.of("NMO0000002"), now);
     MobilePhonePricePlanChangedEvent expectedEvent = MobilePhonePricePlanChangedEvent.builder()
         .customerId(customerId)
         .mobilePhoneNumber(phoneNumber)
         .changeDtm(now)
         .mobilePhoneSvcMgmtNum(svcMgmtNum)
         .mobilePhonePricePlan(afterPricePlan.name())
-        .dcTargetUzooPassProductCode(afterDcTargetUzooPassProductCode)
+        .dcTargetUzooPassProductCodes(List.of(afterDcTargetUzooPassProductCode))
         .build();
     
     // then
@@ -207,7 +207,7 @@ public class CustomerMobilePhoneRelationTest {
   public void givenNoRelation_whenChangePricePlan_thenThrowError() {
     // given
     // when
-    cust.changeMobilePhonePricePlan(MobilePhonePricePlan.SPECIAL, "스페셜", "NMO0000002", now);
+    cust.changeMobilePhonePricePlan(MobilePhonePricePlan.SPECIAL, "스페셜", List.of("NMO0000002"), now);
     // then -> error
   }
   
@@ -217,7 +217,7 @@ public class CustomerMobilePhoneRelationTest {
     cust.linkMobilePhone(cmprh);
     cust.unlinkMobilePhone(after3Days);
     // when
-    cust.changeMobilePhonePricePlan(MobilePhonePricePlan.SPECIAL, "스페셜", "NMO0000002", now);
+    cust.changeMobilePhonePricePlan(MobilePhonePricePlan.SPECIAL, "스페셜", List.of("NMO0000002"), now);
     // then -> error
   }
 }

@@ -2,23 +2,17 @@ package team.caltech.olmago.customer.web;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Mono;
 import team.caltech.olmago.customer.dto.CreateCustomerDto;
 import team.caltech.olmago.customer.dto.CustomerDto;
-import team.caltech.olmago.customer.dto.MobilePhoneDto;
+import team.caltech.olmago.customer.dto.MobilePhoneLinkDto;
 import team.caltech.olmago.customer.service.config.ObjectMapperConfig;
 import team.caltech.olmago.customer.service.proxy.ReqRelMobilePhoneAndOlmagoCustDto;
 import team.caltech.olmago.customer.service.proxy.SwingProxy;
@@ -27,16 +21,15 @@ import team.caltech.olmago.customer.service.service.CustomerService;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -113,7 +106,7 @@ public class CustomerControllerTest {
   public void givenExistedCustomer_whenLinkMobilePhone_thenMustBeOk() throws Exception {
     // given
     CustomerDto dummyCustomerDto = dummyCustomerDto();
-    MobilePhoneDto dummyMobilePhoneDto = dummyMobilePhoneDto();
+    MobilePhoneLinkDto dummyMobilePhoneDto = dummyMobilePhoneDto();
     given(customerService.linkMobilePhone(1L, dummyMobilePhoneDto))
         .willReturn(dummyCustomerDto);
     given(swingProxy.linkMobilePhoneAndOlmagoCustomer(any(ReqRelMobilePhoneAndOlmagoCustDto.class)))
@@ -134,7 +127,7 @@ public class CustomerControllerTest {
   public void givenExistedCustomer_whenUnlinkMobilePhone_thenMustBeOk() throws Exception {
     // given
     CustomerDto dummyCustomerDto = dummyCustomerDto();
-    MobilePhoneDto dummyMobilePhoneDto = dummyMobilePhoneDto();
+    MobilePhoneLinkDto dummyMobilePhoneDto = dummyMobilePhoneDto();
     given(customerService.unlinkMobilePhone(1L, dummyMobilePhoneDto))
         .willReturn(dummyCustomerDto);
     given(swingProxy.unlinkMobilePhoneAndOlmagoCustomer(any(ReqRelMobilePhoneAndOlmagoCustDto.class)))
@@ -155,7 +148,7 @@ public class CustomerControllerTest {
   public void givenExistedCustomer_whenChangeMobilePhonePricePlan_thenMustBeOk() throws Exception {
     // given
     CustomerDto dummyCustomerDto = dummyCustomerDto();
-    MobilePhoneDto dummyMobilePhoneDto = dummyMobilePhoneDto();
+    MobilePhoneLinkDto dummyMobilePhoneDto = dummyMobilePhoneDto();
     given(customerService.unlinkMobilePhone(1L, dummyMobilePhoneDto))
         .willReturn(dummyCustomerDto);
 
@@ -176,7 +169,7 @@ public class CustomerControllerTest {
         .ci("123")
         .name("강인수")
         .productName("플래티넘")
-        .dcTargetUzooPassProductCode("NMO0000001")
+        .dcTargetUzooPassProductCodes(List.of("NMO0000001"))
         .svcMgmtNum(7100000001L)
         .birthday(LocalDate.of(1982,1,1))
         .mobilePhonePricePlan("PLATINUM")
@@ -184,13 +177,13 @@ public class CustomerControllerTest {
         .build();
   }
   
-  private static MobilePhoneDto dummyMobilePhoneDto() {
-    return MobilePhoneDto.builder()
+  private static MobilePhoneLinkDto dummyMobilePhoneDto() {
+    return MobilePhoneLinkDto.builder()
         .phoneNumber("123")
         .svcMgmtNum(7000000001L)
         .mobilePhonePricePlan("PLATINUM")
         .productName("플래티넘")
-        .dcTargetUzooPassProductCode("NMO0000001")
+        .dcTargetUzooPassProductCodes(List.of("NMO0000001"))
         .build();
   }
   
@@ -200,7 +193,7 @@ public class CustomerControllerTest {
         .jsonPath("$.ci").isEqualTo(customerDto.getCi())
         .jsonPath("$.name").isEqualTo(customerDto.getName())
         .jsonPath("$.productName").isEqualTo(customerDto.getProductName())
-        .jsonPath("$.dcTargetUzooPassProductCode").isEqualTo(customerDto.getDcTargetUzooPassProductCode())
+        //.jsonPath("$.dcTargetUzooPassProductCode").isEqualTo(customerDto.getDcTargetUzooPassProductCode())
         .jsonPath("$.svcMgmtNum").isEqualTo(customerDto.getSvcMgmtNum())
         .jsonPath("$.mobilePhonePricePlan").isEqualTo(customerDto.getMobilePhonePricePlan())
         .jsonPath("$.linkedDateTime").isEqualTo(customerDto.getLinkedDateTime().format(DateTimeFormatter.ofPattern(ObjectMapperConfig.DATETIME_FORMATTER)))

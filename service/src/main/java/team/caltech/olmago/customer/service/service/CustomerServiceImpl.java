@@ -9,7 +9,7 @@ import team.caltech.olmago.customer.domain.*;
 import team.caltech.olmago.customer.domain.event.CustomerEventBase;
 import team.caltech.olmago.customer.dto.CreateCustomerDto;
 import team.caltech.olmago.customer.dto.CustomerDto;
-import team.caltech.olmago.customer.dto.MobilePhoneDto;
+import team.caltech.olmago.customer.dto.MobilePhoneLinkDto;
 import team.caltech.olmago.customer.service.message.out.MessageStore;
 
 import javax.transaction.Transactional;
@@ -48,7 +48,7 @@ public class CustomerServiceImpl implements CustomerService {
   
   @Override
   @Transactional
-  public CustomerDto linkMobilePhone(long id, MobilePhoneDto dto) {
+  public CustomerDto linkMobilePhone(long id, MobilePhoneLinkDto dto) {
     Customer customer = customerRepository.findById(id).orElseThrow(IllegalArgumentException::new);
     if (customer.findActiveMobilePhone().isPresent()) {
       throw new IllegalStateException();
@@ -66,13 +66,13 @@ public class CustomerServiceImpl implements CustomerService {
     return new CustomerDto(customer);
   }
   
-  private MobilePhone createMobilePhone(MobilePhoneDto dto) {
+  private MobilePhone createMobilePhone(MobilePhoneLinkDto dto) {
     return MobilePhone.builder()
         .svcMgmtNum(dto.getSvcMgmtNum())
         .phoneNumber(dto.getPhoneNumber())
         .productName(dto.getProductName())
         .mobilePhonePricePlan(MobilePhonePricePlan.valueOf(dto.getMobilePhonePricePlan()))
-        .dcTargetUzooPassProductCode(dto.getDcTargetUzooPassProductCode())
+        .dcTargetUzooPassProductCodes(dto.getDcTargetUzooPassProductCodes())
         .build();
   }
   
@@ -86,7 +86,7 @@ public class CustomerServiceImpl implements CustomerService {
   
   @Override
   @Transactional
-  public CustomerDto unlinkMobilePhone(long id, MobilePhoneDto dto) {
+  public CustomerDto unlinkMobilePhone(long id, MobilePhoneLinkDto dto) {
     LocalDateTime now = LocalDateTime.now();
     Customer customer = customerRepository.findById(id).orElseThrow(IllegalArgumentException::new);
     validateCustomerMobilePhone(customer, dto.getSvcMgmtNum());
@@ -99,12 +99,12 @@ public class CustomerServiceImpl implements CustomerService {
   
   @Override
   @Transactional
-  public CustomerDto changeMobilePhonePricePlan(long id, MobilePhoneDto dto) {
+  public CustomerDto changeMobilePhonePricePlan(long id, MobilePhoneLinkDto dto) {
     LocalDateTime now = LocalDateTime.now();
     Customer customer = customerRepository.findById(id).orElseThrow(IllegalArgumentException::new);
     validateCustomerMobilePhone(customer, dto.getSvcMgmtNum());
     messageStore.saveMessage(
-      wrapEvent(customer.changeMobilePhonePricePlan(MobilePhonePricePlan.valueOf(dto.getMobilePhonePricePlan()), dto.getProductName(), dto.getDcTargetUzooPassProductCode(), now))
+      wrapEvent(customer.changeMobilePhonePricePlan(MobilePhonePricePlan.valueOf(dto.getMobilePhonePricePlan()), dto.getProductName(), dto.getDcTargetUzooPassProductCodes(), now))
     );
     return new CustomerDto(customer);
   }

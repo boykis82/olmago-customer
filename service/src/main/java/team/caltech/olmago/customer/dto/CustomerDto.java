@@ -10,6 +10,7 @@ import team.caltech.olmago.customer.service.config.ObjectMapperConfig;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @EqualsAndHashCode
@@ -28,10 +29,10 @@ public class CustomerDto {
   
   @JsonFormat(pattern = ObjectMapperConfig.DATETIME_FORMATTER)
   private LocalDateTime linkedDateTime;
-  private String dcTargetUzooPassProductCode;
+  private List<String> dcTargetUzooPassProductCodes;
   
   @Builder
-  CustomerDto(long id, String name, LocalDate birthday, String ci, Long svcMgmtNum, String productName, String mobilePhonePricePlan, LocalDateTime linkedDateTime, String dcTargetUzooPassProductCode) {
+  CustomerDto(long id, String name, LocalDate birthday, String ci, Long svcMgmtNum, String productName, String mobilePhonePricePlan, LocalDateTime linkedDateTime, List<String> dcTargetUzooPassProductCodes) {
     this.id = id;
     this.name = name;
     this.birthday = birthday;
@@ -40,7 +41,7 @@ public class CustomerDto {
     this.productName = productName;
     this.mobilePhonePricePlan = mobilePhonePricePlan;
     this.linkedDateTime = linkedDateTime;
-    this.dcTargetUzooPassProductCode = dcTargetUzooPassProductCode;
+    this.dcTargetUzooPassProductCodes = dcTargetUzooPassProductCodes;
   }
   
   public CustomerDto(Customer entity) {
@@ -55,7 +56,7 @@ public class CustomerDto {
           this.svcMgmtNum = mp.getMobilePhone().getSvcMgmtNum();
           this.productName = mp.getMobilePhone().getProductName();
           this.mobilePhonePricePlan = mp.getMobilePhone().getMobilePhonePricePlan().name();
-          this.dcTargetUzooPassProductCode = mp.getMobilePhone().getDcTargetUzooPassProductCode();
+          this.dcTargetUzooPassProductCodes = mp.getMobilePhone().getDcTargetUzooPassProductCodes();
         }
     );
   }

@@ -13,10 +13,11 @@ import team.caltech.olmago.common.message.MessageEnvelopeRepository;
 import team.caltech.olmago.customer.domain.*;
 import team.caltech.olmago.customer.dto.CreateCustomerDto;
 import team.caltech.olmago.customer.dto.CustomerDto;
-import team.caltech.olmago.customer.dto.MobilePhoneDto;
+import team.caltech.olmago.customer.dto.MobilePhoneLinkDto;
 import team.caltech.olmago.customer.service.service.CustomerService;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -64,7 +65,7 @@ public class CustomerServiceTest {
     // then
     assertThat(result.getMobilePhonePricePlan()).isEqualTo("PLATINUM");
     assertThat(result.getSvcMgmtNum()).isEqualTo(7000000001L);
-    assertThat(result.getDcTargetUzooPassProductCode()).isEqualTo("NMO0000001");
+    assertThat(result.getDcTargetUzooPassProductCodes().get(0)).isEqualTo("NMO0000001");
   
     List<MessageEnvelope> msgs = findAllMessageEnvelopesOrderById();
     assertThat(msgs).hasSize(1);
@@ -92,15 +93,15 @@ public class CustomerServiceTest {
   @Test
   public void givenCustomerAndMobilePhone_whenChangeMobilePhonePricePlan_thenSuccess() {
     // given
-    MobilePhoneDto mobilePhoneDto = createMobilePhoneLinkDto();
+    MobilePhoneLinkDto mobilePhoneDto = createMobilePhoneLinkDto();
     customerService.linkMobilePhone(customerDto.getId(), createMobilePhoneLinkDto());
     
     // when
     CustomerDto result = customerService.changeMobilePhonePricePlan(customerDto.getId(), createMobilePhonePricePlanChangeDto());
     
     // then
-    assertThat(result .getMobilePhonePricePlan()).isEqualTo("SPECIAL");
-    assertThat(result .getDcTargetUzooPassProductCode()).isNull();
+    assertThat(result.getMobilePhonePricePlan()).isEqualTo("SPECIAL");
+    assertThat(result.getDcTargetUzooPassProductCodes()).isEmpty();
   
     List<MessageEnvelope> msgs = findAllMessageEnvelopesOrderById();
     assertThat(msgs).hasSize(2);
@@ -121,7 +122,7 @@ public class CustomerServiceTest {
     // then
     assertThat(result.getSvcMgmtNum()).isEqualTo(7000000002L);
     assertThat(result.getMobilePhonePricePlan()).isEqualTo("PLATINUM");
-    assertThat(result.getDcTargetUzooPassProductCode()).isEqualTo("NMO0000002");
+    assertThat(result.getDcTargetUzooPassProductCodes().get(0)).isEqualTo("NMO0000002");
   
     List<MessageEnvelope> msgs = findAllMessageEnvelopesOrderById();
     assertThat(msgs).hasSize(4);
@@ -131,36 +132,37 @@ public class CustomerServiceTest {
     assertThat(msgs.get(3).getMessageName()).isEqualTo("mobilePhoneServiceLinkedEvent");
   }
   
-  private static MobilePhoneDto createMobilePhoneLinkDto() {
-    return MobilePhoneDto.builder()
+  private static MobilePhoneLinkDto createMobilePhoneLinkDto() {
+    return MobilePhoneLinkDto.builder()
         .svcMgmtNum(7000000001L)
         .phoneNumber("01012345678")
         .mobilePhonePricePlan("PLATINUM")
         .productName("플래티넘")
-        .dcTargetUzooPassProductCode("NMO0000001")
+        .dcTargetUzooPassProductCodes(List.of("NMO0000001"))
         .build();
   }
   
-  private static MobilePhoneDto createMobilePhoneUnlinkDto() {
+  private static MobilePhoneLinkDto createMobilePhoneUnlinkDto() {
     return createMobilePhoneLinkDto();
   }
   
-  private static MobilePhoneDto createMobilePhonePricePlanChangeDto() {
-    return MobilePhoneDto.builder()
+  private static MobilePhoneLinkDto createMobilePhonePricePlanChangeDto() {
+    return MobilePhoneLinkDto.builder()
         .svcMgmtNum(7000000001L)
         .phoneNumber("01012345678")
         .mobilePhonePricePlan("SPECIAL")
+        .dcTargetUzooPassProductCodes(Collections.emptyList())
         .productName("스페셜")
         .build();
   }
   
-  private static MobilePhoneDto createMobilePhoneNewLinkDto() {
-    return MobilePhoneDto.builder()
+  private static MobilePhoneLinkDto createMobilePhoneNewLinkDto() {
+    return MobilePhoneLinkDto.builder()
         .svcMgmtNum(7000000002L)
         .phoneNumber("01012345679")
         .mobilePhonePricePlan("PLATINUM")
         .productName("플래티넘")
-        .dcTargetUzooPassProductCode("NMO0000002")
+        .dcTargetUzooPassProductCodes(List.of("NMO0000002"))
         .build();
   }
   

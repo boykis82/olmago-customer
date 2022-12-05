@@ -7,7 +7,7 @@ import team.caltech.olmago.common.message.MessageEnvelope;
 import team.caltech.olmago.common.message.MessageEnvelopeRepository;
 import team.caltech.olmago.customer.dto.CreateCustomerDto;
 import team.caltech.olmago.customer.dto.CustomerDto;
-import team.caltech.olmago.customer.dto.MobilePhoneDto;
+import team.caltech.olmago.customer.dto.MobilePhoneLinkDto;
 import team.caltech.olmago.customer.service.proxy.ReqRelMobilePhoneAndOlmagoCustDto;
 import team.caltech.olmago.customer.service.proxy.SwingProxy;
 import team.caltech.olmago.customer.service.service.CustomerService;
@@ -35,21 +35,21 @@ public class CustomerController {
   }
   
   @PutMapping("/{id}/linkMobilePhone")
-  public ResponseEntity<CustomerDto> linkMobilePhone(@PathVariable("id") long id, @RequestBody MobilePhoneDto dto) {
+  public ResponseEntity<CustomerDto> linkMobilePhone(@PathVariable("id") long id, @RequestBody MobilePhoneLinkDto dto) {
     CustomerDto response = customerService.linkMobilePhone(id, dto);
     swingProxy.linkMobilePhoneAndOlmagoCustomer(toReqRelMobilePhoneAndOlmagoCustDto(response)).subscribe();
     return ResponseEntity.ok(response);
   }
   
   @PutMapping("/{id}/unlinkMobilePhone")
-  public ResponseEntity<CustomerDto> unlinkMobilePhone(@PathVariable("id") long id, @RequestBody MobilePhoneDto dto) {
+  public ResponseEntity<CustomerDto> unlinkMobilePhone(@PathVariable("id") long id, @RequestBody MobilePhoneLinkDto dto) {
     CustomerDto response = customerService.unlinkMobilePhone(id, dto);
     swingProxy.unlinkMobilePhoneAndOlmagoCustomer(toReqRelMobilePhoneAndOlmagoCustDto(response)).subscribe();
     return ResponseEntity.ok(response);
   }
   
   @PutMapping("/{id}/changeMobilePhonePricePlan")
-  public ResponseEntity<CustomerDto> changeMobilePhonePricePlan(@PathVariable("id") long id, @RequestBody MobilePhoneDto dto) {
+  public ResponseEntity<CustomerDto> changeMobilePhonePricePlan(@PathVariable("id") long id, @RequestBody MobilePhoneLinkDto dto) {
     return ResponseEntity.ok(customerService.changeMobilePhonePricePlan(id, dto));
   }
 

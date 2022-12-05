@@ -9,16 +9,10 @@ import java.time.LocalDateTime;
 @Getter
 public class MobilePhoneServiceUnlinkedEvent extends CustomerEventBase {
   private final long mobilePhoneSvcMgmtNum;
-  private final String mobilePhoneNumber;
-  private final String mobilePhonePricePlan;
-  private final String dcTargetUzooPassProductCode;
   
   @Builder
-  public MobilePhoneServiceUnlinkedEvent(long customerId, LocalDateTime unlinkedDtm, long mobilePhoneSvcMgmtNum, String mobilePhoneNumber, String mobilePhonePricePlan, String dcTargetUzooPassProductCode) {
+  public MobilePhoneServiceUnlinkedEvent(long customerId, LocalDateTime unlinkedDtm, long mobilePhoneSvcMgmtNum) {
     super(customerId, unlinkedDtm);
     this.mobilePhoneSvcMgmtNum = mobilePhoneSvcMgmtNum;
-    this.mobilePhoneNumber = mobilePhoneNumber;
-    this.mobilePhonePricePlan = mobilePhonePricePlan;
-    this.dcTargetUzooPassProductCode = dcTargetUzooPassProductCode;
   }
 }

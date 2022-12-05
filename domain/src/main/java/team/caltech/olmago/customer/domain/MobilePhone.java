@@ -38,24 +38,48 @@ public class MobilePhone {
   @Column(name = "mbl_phone_prcpln", nullable = false)
   private MobilePhonePricePlan mobilePhonePricePlan;
   
-  @Column(name = "dc_uzoo_pass_prod_cd")
-  private String dcTargetUzooPassProductCode;
+  @Column(name = "dc_uzoo_pass_prod_cd1")
+  private String dcTargetUzooPassProductCode1;
+  
+  @Column(name = "dc_uzoo_pass_prod_cd2")
+  private String dcTargetUzooPassProductCode2;
   
   @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, mappedBy = "mobilePhone")
   private List<CustomerMobilePhoneRelationHistory> customerMobilePhoneRelationHistories = new ArrayList<>();
-  
+
+  // todo : 할인대상우주패스 여러개 수용할수 있게 수정!
   @Builder
-  public MobilePhone(long svcMgmtNum, String phoneNumber, String productName, MobilePhonePricePlan mobilePhonePricePlan, String dcTargetUzooPassProductCode) {
+  public MobilePhone(long svcMgmtNum, String phoneNumber, String productName, MobilePhonePricePlan mobilePhonePricePlan, List<String> dcTargetUzooPassProductCodes) {
     this.svcMgmtNum = svcMgmtNum;
     this.phoneNumber = phoneNumber;
     this.productName = productName;
     this.mobilePhonePricePlan = mobilePhonePricePlan;
-    this.dcTargetUzooPassProductCode = dcTargetUzooPassProductCode;
+    setDcTargetUzooPassProductCodes(dcTargetUzooPassProductCodes);
   }
   
-  public void changeMobilePhonePricePlan(MobilePhonePricePlan mobilePhonePricePlan, String productName, String dcTargetUzooPassProductCode) {
+  public void changeMobilePhonePricePlan(MobilePhonePricePlan mobilePhonePricePlan, String productName, List<String> dcTargetUzooPassProductCodes) {
     this.mobilePhonePricePlan = mobilePhonePricePlan;
     this.productName = productName;
-    this.dcTargetUzooPassProductCode = dcTargetUzooPassProductCode;
+    setDcTargetUzooPassProductCodes(dcTargetUzooPassProductCodes);
+  }
+  
+  private void setDcTargetUzooPassProductCodes(List<String> dcTargetUzooPassProductCodes) {
+    if (dcTargetUzooPassProductCodes.size() > 1) {
+      this.dcTargetUzooPassProductCode1 = dcTargetUzooPassProductCodes.get(0);
+      this.dcTargetUzooPassProductCode2 = dcTargetUzooPassProductCodes.get(1);
+    } else if (dcTargetUzooPassProductCodes.size() == 1) {
+      this.dcTargetUzooPassProductCode1 = dcTargetUzooPassProductCodes.get(0);
+      this.dcTargetUzooPassProductCode2 = null;
+    } else {
+      this.dcTargetUzooPassProductCode1 = null;
+      this.dcTargetUzooPassProductCode2 = null;
+    }
+  }
+  
+  public List<String> getDcTargetUzooPassProductCodes() {
+    List<String> result = new ArrayList<>();
+    if (dcTargetUzooPassProductCode1 != null) result.add(dcTargetUzooPassProductCode1);
+    if (dcTargetUzooPassProductCode2 != null) result.add(dcTargetUzooPassProductCode2);
+    return result;
   }
 }
