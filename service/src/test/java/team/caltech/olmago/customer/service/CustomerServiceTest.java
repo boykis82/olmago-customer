@@ -60,7 +60,7 @@ public class CustomerServiceTest {
   public void givenCustomerAndMobilePhone_whenLinkMobilePhone_thenSuccess() {
     // given
     // when
-    CustomerDto result = customerService.linkMobilePhone(customerDto.getId(), createMobilePhoneLinkDto());
+    CustomerDto result = customerService.linkMobilePhone(customerDto.getCustomerId(), createMobilePhoneLinkDto());
     
     // then
     assertThat(result.getMobilePhonePricePlan()).isEqualTo("PLATINUM");
@@ -75,10 +75,10 @@ public class CustomerServiceTest {
   @Test
   public void givenCustomerAndMobilePhone_whenUnlinkMobilePhone_thenSuccess() {
     // given
-    customerService.linkMobilePhone(customerDto.getId(), createMobilePhoneLinkDto());
+    customerService.linkMobilePhone(customerDto.getCustomerId(), createMobilePhoneLinkDto());
     
     // when
-    CustomerDto result = customerService.unlinkMobilePhone(customerDto.getId(), createMobilePhoneUnlinkDto());
+    CustomerDto result = customerService.unlinkMobilePhone(customerDto.getCustomerId(), createMobilePhoneUnlinkDto());
     
     // then
     assertThat(result.getMobilePhonePricePlan()).isNull();
@@ -94,10 +94,10 @@ public class CustomerServiceTest {
   public void givenCustomerAndMobilePhone_whenChangeMobilePhonePricePlan_thenSuccess() {
     // given
     MobilePhoneLinkDto mobilePhoneDto = createMobilePhoneLinkDto();
-    customerService.linkMobilePhone(customerDto.getId(), createMobilePhoneLinkDto());
+    customerService.linkMobilePhone(customerDto.getCustomerId(), createMobilePhoneLinkDto());
     
     // when
-    CustomerDto result = customerService.changeMobilePhonePricePlan(customerDto.getId(), createMobilePhonePricePlanChangeDto());
+    CustomerDto result = customerService.changeMobilePhonePricePlan(customerDto.getCustomerId(), createMobilePhonePricePlanChangeDto());
     
     // then
     assertThat(result.getMobilePhonePricePlan()).isEqualTo("SPECIAL");
@@ -112,12 +112,12 @@ public class CustomerServiceTest {
   @Test
   public void givenCustomerAndMobilePhone_whenMultipleStep_thenSuccess() {
     // given
-    customerService.linkMobilePhone(customerDto.getId(), createMobilePhoneLinkDto());
-    customerService.changeMobilePhonePricePlan(customerDto.getId(), createMobilePhonePricePlanChangeDto());
-    customerService.unlinkMobilePhone(customerDto.getId(), createMobilePhoneUnlinkDto());
+    customerService.linkMobilePhone(customerDto.getCustomerId(), createMobilePhoneLinkDto());
+    customerService.changeMobilePhonePricePlan(customerDto.getCustomerId(), createMobilePhonePricePlanChangeDto());
+    customerService.unlinkMobilePhone(customerDto.getCustomerId(), createMobilePhoneUnlinkDto());
   
     // when
-    CustomerDto result = customerService.linkMobilePhone(customerDto.getId(), createMobilePhoneNewLinkDto());
+    CustomerDto result = customerService.linkMobilePhone(customerDto.getCustomerId(), createMobilePhoneNewLinkDto());
     
     // then
     assertThat(result.getSvcMgmtNum()).isEqualTo(7000000002L);

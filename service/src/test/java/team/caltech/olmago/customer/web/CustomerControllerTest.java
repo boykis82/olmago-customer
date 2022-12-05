@@ -165,7 +165,7 @@ public class CustomerControllerTest {
   
   private static CustomerDto dummyCustomerDto() {
     return CustomerDto.builder()
-        .id(1L)
+        .customerId(1L)
         .ci("123")
         .name("강인수")
         .productName("플래티넘")
@@ -189,7 +189,7 @@ public class CustomerControllerTest {
   
   private void compareResponseAndCustomerDto(WebTestClient.ResponseSpec responseSpec, CustomerDto customerDto) {
     responseSpec.expectBody()
-        .jsonPath("$.id").isEqualTo(customerDto.getId())
+        .jsonPath("$.customerId").isEqualTo(customerDto.getCustomerId())
         .jsonPath("$.ci").isEqualTo(customerDto.getCi())
         .jsonPath("$.name").isEqualTo(customerDto.getName())
         .jsonPath("$.productName").isEqualTo(customerDto.getProductName())

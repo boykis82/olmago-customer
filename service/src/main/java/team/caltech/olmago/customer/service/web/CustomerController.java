@@ -60,7 +60,7 @@ public class CustomerController {
 
   private ReqRelMobilePhoneAndOlmagoCustDto toReqRelMobilePhoneAndOlmagoCustDto(CustomerDto customerDto) {
     return ReqRelMobilePhoneAndOlmagoCustDto.builder()
-        .olmagoCustomerId(customerDto.getId())
+        .olmagoCustomerId(customerDto.getCustomerId())
         .svcMgmtNum(customerDto.getSvcMgmtNum())
         .eventDateTime(LocalDateTime.now())
         .build();

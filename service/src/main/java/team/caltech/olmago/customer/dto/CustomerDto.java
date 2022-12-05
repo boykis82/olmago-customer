@@ -16,7 +16,7 @@ import java.util.List;
 @EqualsAndHashCode
 @NoArgsConstructor
 public class CustomerDto {
-  private long id;
+  private long customerId;
   private String name;
   
   @JsonFormat(pattern = ObjectMapperConfig.DATE_FORMATTER)
@@ -32,8 +32,8 @@ public class CustomerDto {
   private List<String> dcTargetUzooPassProductCodes;
   
   @Builder
-  CustomerDto(long id, String name, LocalDate birthday, String ci, Long svcMgmtNum, String productName, String mobilePhonePricePlan, LocalDateTime linkedDateTime, List<String> dcTargetUzooPassProductCodes) {
-    this.id = id;
+  CustomerDto(long customerId, String name, LocalDate birthday, String ci, Long svcMgmtNum, String productName, String mobilePhonePricePlan, LocalDateTime linkedDateTime, List<String> dcTargetUzooPassProductCodes) {
+    this.customerId = customerId;
     this.name = name;
     this.birthday = birthday;
     this.ci = ci;
@@ -45,7 +45,7 @@ public class CustomerDto {
   }
   
   public CustomerDto(Customer entity) {
-    this.id = entity.getId();
+    this.customerId = entity.getId();
     this.name = entity.getName();
     this.birthday = entity.getBirthday();
     this.ci = entity.getCi();
